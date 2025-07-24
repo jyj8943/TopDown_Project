@@ -18,6 +18,8 @@ public class ResourceController : MonoBehaviour
     public float MaxHealth => statHandler.Health;
 
     public AudioClip damageClip;
+
+    private Action<float, float> OnChangeHealth;
     
     private void Awake()
     {
@@ -55,6 +57,8 @@ public class ResourceController : MonoBehaviour
         CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
         CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
 
+        OnChangeHealth?.Invoke(CurrentHealth, MaxHealth);
+        
         if (change < 0)
         {
             animationHandler.Damage();
@@ -74,5 +78,15 @@ public class ResourceController : MonoBehaviour
     private void Death()
     {
         baseController.Death();
+    }
+
+    public void AddHealthChangEvent(Action<float, float> action)
+    {
+        OnChangeHealth += action;
+    }
+
+    public void RemoveHealthChangeEvent(Action<float, float> action)
+    {
+        OnChangeHealth -= action;
     }
 }

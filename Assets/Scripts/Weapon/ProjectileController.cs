@@ -51,6 +51,20 @@ public class ProjectileController : MonoBehaviour
         }
         else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << other.gameObject.layer)))
         {
+            ResourceController resourceController = other.GetComponent<ResourceController>();
+            if (resourceController != null)
+            {
+                resourceController.ChangeHealth(-rangeWeaponHandler.Power);
+                if (rangeWeaponHandler.IsOnKnockBack)
+                {
+                    BaseController controller = other.GetComponent<BaseController>();
+                    if (controller != null)
+                    {
+                        controller.ApplyKnockBack(transform, rangeWeaponHandler.KnockBackPower, rangeWeaponHandler.KnockBackTime);
+                    }
+                }
+            }
+            
             DestroyProjectile(other.ClosestPoint(transform.position), fxOnDestroy);
         }
     }

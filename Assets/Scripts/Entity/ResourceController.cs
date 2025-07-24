@@ -24,6 +24,11 @@ public class ResourceController : MonoBehaviour
         animationHandler = GetComponent<AnimationHandler>();
     }
 
+    private void Start()
+    {
+        CurrentHealth = statHandler.Health;
+    }
+
     private void Update()
     {
         if (timeSinceLastChange < healthChangeDelay)
@@ -63,6 +68,6 @@ public class ResourceController : MonoBehaviour
 
     private void Death()
     {
-        
+        baseController.Death();
     }
 }

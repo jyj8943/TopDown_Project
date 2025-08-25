@@ -121,21 +121,23 @@ public class EnemyManager : MonoBehaviour
             gameManager.EndOfWave();
     }
 
-    public void StartStage(WaveData waveData)
+    public void StartStage(StageInstance stageInstance)
     {
         if (waveRoutine != null)
         {
             StopCoroutine(waveRoutine);
         }
 
-        waveRoutine = StartCoroutine(SpawnStart(waveData));
+        waveRoutine = StartCoroutine(SpawnStart(stageInstance));
     }
 
-    private IEnumerator SpawnStart(WaveData waveData)
+    private IEnumerator SpawnStart(StageInstance stageInstance)
     {
         enemySpawnComplite = false;
         yield return new WaitForSeconds(timeBetweenWaves);
 
+        WaveData waveData = stageInstance.currentStageInfo.waves[stageInstance.currentWave];
+        
         for (int i = 0; i < waveData.monsters.Length; i++)
         {
             yield return new WaitForSeconds(timeBetweenWaves);

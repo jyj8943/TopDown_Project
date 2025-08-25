@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     private ResourceController _playerResourceController;
 
+    [SerializeField] private int currentStageIndex = 0;
     [SerializeField] private int currentWaveIndex = 0;
 
     private EnemyManager enemyManager;
@@ -65,7 +66,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         uiManager.SetPlayGame();
-        StartNextWave();
+        // StartNextWave();
+        StartStage();
     }
 
     private void StartNextWave()
@@ -77,12 +79,59 @@ public class GameManager : MonoBehaviour
 
     public void EndOfWave()
     {
-        StartNextWave();
+        // StartNextWave();
+        StartNextWaveInStage();
     }
 
     public void GameOver()
     {
         enemyManager.StopWave();
         uiManager.SetGameOver();
+    }
+
+    public void StartStage()
+    {
+        StageInfo stageInfo = GetStageInfo(currentStageIndex);
+
+        if (stageInfo == null)
+        {
+            Debug.Log("스테이지 정보가 없습니다.");
+            return;
+        }
+        
+        uiManager.ChangeWave(currentStageIndex + 1);
+        enemyManager.StartStage(stageInfo.waves[currentStageIndex]);
+    }
+
+    public void StartNextWaveInStage()
+    {
+        StageInfo stageInfo = GetStageInfo(currentStageIndex);
+        if (stageInfo.waves.Length - 1 > currentWaveIndex)
+        {
+            currentWaveIndex++;
+            StartStage();
+        }
+        else
+        {
+            CompleteStage();
+        }
+    }
+
+    public void CompleteStage()
+    {
+        currentStageIndex++;
+        currentWaveIndex = 0;
+        StartStage();
+    }
+    
+    private StageInfo GetStageInfo(int stageKey)
+    {
+        foreach (var stage in StageData.Stages)
+        {
+            if (stage.stageKey == stageKey)
+                return stage;
+        }
+
+        return null;
     }
 }

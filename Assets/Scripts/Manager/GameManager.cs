@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     private UIManager uiManager;
     public static bool isFirstLoading = true;
 
+    private CameraShake cameraShake;
+    
     private void Awake()
     {
         Instance = this;
@@ -38,8 +40,16 @@ public class GameManager : MonoBehaviour
         _playerResourceController = player.GetComponent<ResourceController>();
         _playerResourceController.RemoveHealthChangeEvent(uiManager.ChangePlaerHP);
         _playerResourceController.AddHealthChangEvent(uiManager.ChangePlaerHP);
+
+        cameraShake = FindObjectOfType<CameraShake>();
+        MainCameraShake();
     }
 
+    public void MainCameraShake()
+    {
+        cameraShake.ShakeCamera(1, 1, 1);
+    }
+    
     private void Start()
     {
         if (!isFirstLoading)

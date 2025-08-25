@@ -55,10 +55,13 @@ public class RangeWeaponHandler : WeaponHandler
 
     private ProjectileManager projectileManager;
 
+    private StatHandler statHandler;
+
     protected override void Start()
     {
         base.Start();
         projectileManager = ProjectileManager.Instance;
+        statHandler = GetComponentInParent<StatHandler>();
     }
     
     public override void Attack()
@@ -66,7 +69,7 @@ public class RangeWeaponHandler : WeaponHandler
         base.Attack();
 
         float projectileAngleSpace = multipleProjectileAngle;
-        int numberOfProjectilePerShot = numberofProjectilesPerShot;
+        int numberOfProjectilePerShot = numberofProjectilesPerShot + (int)statHandler.GetStat(StatType.ProjectileCount);
 
         float minAngle = -(numberofProjectilesPerShot / 2f) * projectileAngleSpace;
 
